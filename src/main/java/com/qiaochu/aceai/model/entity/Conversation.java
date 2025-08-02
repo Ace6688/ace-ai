@@ -17,12 +17,12 @@ public class Conversation {
     private String id;
 
     /**
-     * 用户
+     * 用户id
      */
     private Long userId;
 
     /**
-     * 用户头像
+     * 会话名称
      */
     private String conversationName;
 
