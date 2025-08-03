@@ -2,17 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qiaochu.aceai.mapper.AiChatMemoryMapper">
+<mapper namespace="com.qiaochu.aceai.mapper.HistoryMessageMapper">
 
-    <resultMap id="BaseResultMap" type="com.qiaochu.aceai.model.entity.AiChatMemory">
+    <resultMap id="BaseResultMap" type="com.qiaochu.aceai.model.entity.HistoryMessage">
             <id property="id" column="id" />
-            <result property="conversation_id" column="conversation_id" />
+            <result property="conversationId" column="conversationId" />
             <result property="content" column="content" />
             <result property="type" column="type" />
             <result property="timestamp" column="timestamp" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,conversation_id,content,`type`,`timestamp`
+        id,conversationId,content,type,timestamp
     </sql>
 </mapper>

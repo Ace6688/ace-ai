@@ -7,10 +7,10 @@ import java.util.Date;
 
 /**
  * 
- * @TableName ai_chat_memory
+ * @TableName history_message
  */
-@TableName(value ="ai_chat_memory")
-public class AiChatMemory {
+@TableName(value ="history_message")
+public class HistoryMessage {
     /**
      * 
      */
@@ -20,7 +20,7 @@ public class AiChatMemory {
     /**
      * 
      */
-    private String conversation_id;
+    private String conversationId;
 
     /**
      * 
@@ -54,15 +54,15 @@ public class AiChatMemory {
     /**
      * 
      */
-    public String getConversation_id() {
-        return conversation_id;
+    public String getConversationId() {
+        return conversationId;
     }
 
     /**
      * 
      */
-    public void setConversation_id(String conversation_id) {
-        this.conversation_id = conversation_id;
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
     }
 
     /**
@@ -118,9 +118,9 @@ public class AiChatMemory {
         if (getClass() != that.getClass()) {
             return false;
         }
-        AiChatMemory other = (AiChatMemory) that;
+        HistoryMessage other = (HistoryMessage) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getConversation_id() == null ? other.getConversation_id() == null : this.getConversation_id().equals(other.getConversation_id()))
+            && (this.getConversationId() == null ? other.getConversationId() == null : this.getConversationId().equals(other.getConversationId()))
             && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getTimestamp() == null ? other.getTimestamp() == null : this.getTimestamp().equals(other.getTimestamp()));
@@ -131,7 +131,7 @@ public class AiChatMemory {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getConversation_id() == null) ? 0 : getConversation_id().hashCode());
+        result = prime * result + ((getConversationId() == null) ? 0 : getConversationId().hashCode());
         result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getTimestamp() == null) ? 0 : getTimestamp().hashCode());
@@ -145,7 +145,7 @@ public class AiChatMemory {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", conversation_id=").append(conversation_id);
+        sb.append(", conversationId=").append(conversationId);
         sb.append(", content=").append(content);
         sb.append(", type=").append(type);
         sb.append(", timestamp=").append(timestamp);

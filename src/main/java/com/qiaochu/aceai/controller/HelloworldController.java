@@ -2,6 +2,10 @@ package com.qiaochu.aceai.controller;
 
 import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
 import com.alibaba.cloud.ai.memory.jdbc.MysqlChatMemoryRepository;
+import com.qiaochu.aceai.common.ErrorCode;
+import com.qiaochu.aceai.exception.BusinessException;
+import com.qiaochu.aceai.service.HistoryMessageService;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -22,13 +26,17 @@ public class HelloworldController {
   private static final String DEFAULT_PROMPT = "你是一个博学的智能聊天助手，请根据用户提问回答！";
 
   private final ChatClient dashScopeChatClient;
+  @Resource
+  private HistoryMessageService historyMessageService;
 
   public HelloworldController(JdbcTemplate jdbcTemplate, ChatClient.Builder chatClientBuilder) {
+    //基于mysql的聊天上下文
     ChatMemoryRepository chatMemoryRepository = MysqlChatMemoryRepository.mysqlBuilder()
             .jdbcTemplate(jdbcTemplate)
             .build();
     ChatMemory chatMemory = MessageWindowChatMemory.builder()
             .chatMemoryRepository(chatMemoryRepository)
+            .maxMessages(20)
             .build();
 
     this.dashScopeChatClient = chatClientBuilder
@@ -58,11 +66,20 @@ public class HelloworldController {
 //  }
   @GetMapping("/simple/chat")
   public String simpleChat(@RequestParam(value = "query", defaultValue = "你好，很高兴认识你，能简单介绍一下自己吗？")String query,
-                           @RequestParam(value = "chat-id", defaultValue = "1") String chatId) {
+                           @RequestParam(value = "conversationId", defaultValue = "1") String conversationId) {
 
-    return dashScopeChatClient.prompt(query)
-            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, chatId))
+    boolean save = historyMessageService.addHistoryMessage(query, "user", conversationId);
+    if (!save) {
+      throw new BusinessException(ErrorCode.SYSTEM_ERROR, "添加历史记录失败，数据库错误");
+    }
+    String response = dashScopeChatClient.prompt(query)
+            .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
             .call().content();
+    save = historyMessageService.addHistoryMessage(response, "assistant", conversationId);
+    if (!save) {
+      throw new BusinessException(ErrorCode.SYSTEM_ERROR, "添加历史记录失败，数据库错误");
+    }
+    return response;
   }
   /**
    * ChatClient 流式调用
